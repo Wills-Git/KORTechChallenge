@@ -3,6 +3,8 @@ import "@radix-ui/themes/styles.css"
 import { Button } from "@radix-ui/themes"
 import axios from "axios"
 import { useState } from "react"
+import { Rollup } from "vite"
+import AppRoutes from "./routes/routes.js"
 
 const App = () => {
   const [responseData, setResponseData] = useState(null)
@@ -37,16 +39,7 @@ const App = () => {
 
   return (
     <div className="App">
-      <header className="App-header">
-        <Button onClick={handleClick}>test connection</Button>
-        {responseData && (
-          <div>
-            <h2>Response Data:</h2>
-            <pre>{JSON.stringify(responseData, null, 1)}</pre>
-          </div>
-        )}
-        {error && <div>Error: {error}</div>}
-      </header>
+      <AppRoutes />
     </div>
   )
 }

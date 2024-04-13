@@ -4,6 +4,7 @@ import { createRoot } from "react-dom/client"
 import { Provider } from "react-redux"
 import App from "./App.js"
 import { store } from "./app/store.js"
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
 import "./index.css"
 
 
@@ -15,11 +16,13 @@ if (container) {
 
   root.render(
     <React.StrictMode>
-      <Theme>
-        <Provider store={store}>
-          <App />
-        </Provider>
-      </Theme>
+      <Router>
+        <Theme>
+          <Provider store={store}>
+            <App />
+          </Provider>
+        </Theme>
+      </Router>
     </React.StrictMode>,
   )
 } else {
