@@ -1,6 +1,9 @@
 import AWS from 'aws-sdk';
-const accessKeyId = String(process.env.ACCESSKEY) ;
-const secretAccessKey = String(process.env.SECRETKEY) ;
+import axios from 'axios';
+import checkTableExists from '../util/checkTableExists';
+
+const accessKeyId = String(process.env.ACCESSKEY);
+const secretAccessKey = String(process.env.SECRETKEY);
 //use settings from env to configure connection to
 const dummyCredentials = new AWS.Credentials({
   accessKeyId: accessKeyId,
@@ -10,12 +13,15 @@ AWS.config.update({
   credentials: dummyCredentials,
   region: 'localhost',
 });
+//singleton dynamoDB document client
 const docClient = new AWS.DynamoDB.DocumentClient({
   region: 'localhost',
   endpoint: 'http://localhost:8000',
   convertEmptyValues: true,
 });
 
-//TODO: Db init, single table, with relevant data [username, displayname, status, friend list]
 
-export default docClient;
+
+//initializing table with dummy data if it isn't already present
+const ddb = new AWS.DynamoDB();
+export {docClient,ddb};
