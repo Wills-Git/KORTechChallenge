@@ -9,3 +9,6 @@
 - it's okay to use component libraries
 - usecase for redux here is mostly presentation level, although there are cases here for performance. Will also be using RTK query.
 - tailwind is fine (personally I have more experience with modular css but I've been enjoying tailwind lately. great article that conviced me on it a while ago: [link](https://adamwathan.me/css-utility-classes-and-separation-of-concerns/))
+
+## 4/14 - Working on frontend, changing my layout idea
+I've decided to change from a 'view' based frontend architecture to a single-page with conditional rendering for components

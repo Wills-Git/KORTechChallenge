@@ -45,7 +45,7 @@ router.post('/test', validate, async (req: Request, res: Response) => {
       ExpressionAttributeNames: {
         '#name': 'name', //name is reserved keyword
       },
-      ProjectionExpression: 'PK, #name',
+      ProjectionExpression: 'PK, #name, imageUrl,content, status',
     };
 
     const names = await docClient.scan(paramsNames).promise();

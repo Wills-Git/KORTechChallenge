@@ -21,12 +21,12 @@ export default function LoginForm() {
       <CardContent>
         <div className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="email">Username</Label>
+            <Label htmlFor="username">Username</Label>
             <Input
-              id="email"
-              placeholder="m@example.com"
+              id="username"
+              placeholder="username"
               required
-              type="email"
+              type="text"
             />
           </div>
           <div className="space-y-1">

@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button.tsx"
 import "./layout.css"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar.tsx"
 import { cn } from "@/lib/utils.ts"
+import UsersList from "../UsersList/UsersList.tsx"
 
 function Landing() {
   const [responseData, setResponseData] = useState(null)
@@ -45,28 +46,8 @@ function Landing() {
         <div className="sidebar">
           <LoginForm />
         </div>
-        <div className="users grid grid-cols-3 gap-2">
-          {responseData &&
-            responseData.users &&
-            responseData.users.map(user => (
-              <div key={user.id}>
-                <div className="flex items-center place-content-center border-red-100 border-2  gap-4">
-                  <Avatar className="hidden h-10 w-10 sm:flex">
-                    <AvatarImage src={user.imageUrl} alt="Avatar" />
-                    <AvatarFallback>😃</AvatarFallback>
-                  </Avatar>
-                  <div className="grid  gap-3">
-                    <p className="text-sm font-medium text-pretty text-nowrap text-clip leading-none">
-                      {user.name}
-                    </p>
-                    <p className="text-sm text-muted-foreground">status:</p>
-                  </div>
-                  <Button variant="outline"> + </Button>
-                </div>
-              </div>
-            ))}
+        <UsersList data={responseData}/>
         </div>
-      </div>
     </>
   )
 }
