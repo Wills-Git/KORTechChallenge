@@ -1,0 +1,9 @@
+.layout {
+    display: grid;
+    grid:
+    "sidebar users" 1fr
+    / auto 1fr;
+    gap: 1rem;
+}
+.sidebar { grid-area: sidebar; }
+.users { grid-area: users; }

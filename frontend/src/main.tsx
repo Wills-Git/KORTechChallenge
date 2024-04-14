@@ -1,13 +1,11 @@
 import React from "react"
-import { Theme } from "@radix-ui/themes"
+
 import { createRoot } from "react-dom/client"
 import { Provider } from "react-redux"
 import App from "./App.js"
 import { store } from "./app/store.js"
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
 import "./index.css"
-
-
 
 const container = document.getElementById("root")
 
@@ -17,11 +15,9 @@ if (container) {
   root.render(
     <React.StrictMode>
       <Router>
-        <Theme>
-          <Provider store={store}>
-            <App />
-          </Provider>
-        </Theme>
+        <Provider store={store}>
+          <App />
+        </Provider>
       </Router>
     </React.StrictMode>,
   )
