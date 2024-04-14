@@ -13,7 +13,10 @@ interface UserCountAttributes {
   imageUrl: string;
   status: string;
 }
-
+export interface AWSError {
+  code?: string;
+  message?: string;
+}
 export interface UserAttributes {
   count: UserCountAttributes;
   info: UserInfoAttributes;

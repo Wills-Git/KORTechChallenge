@@ -1,47 +1,53 @@
-import axios from 'axios'
 
-
+import { UserAttributes } from '../types/types';
+import {
+  uniqueNamesGenerator,
+  adjectives,
+  colors,
+  names,
+  Config,
+} from 'unique-names-generator';
 
 /**
- * Asynchronously generates user attributes for a new user with a specified user ID.
- * The function fetches a random name from an external API and generates a random avatar
- * from a set list of avatars. It initializes user attributes for both user statistics
- * and user information.
+ * Generates user attributes, including user statistics and information, for a new or existing user.
+ * The function optionally accepts a name and username; if not provided, it generates a unique fake name and username
+ * using a combination of colors, adjectives, and names. The fake username is used as a primary key to prevent duplicates.
+ * It also assigns a random avatar from a predefined set of avatars. The function returns an object with separate
+ * attributes for user statistics and information. Although the setup suggests asynchronous behavior, the function
+ * operates synchronously and returns directly without waiting for any asynchronous operations.
  *
- * @async
- * @function generateUser
- * @param {number} userid - The unique identifier for the user.
- * @returns {Promise<Object[]>} A promise that resolves to an array of objects, each representing
- *                              user attributes for different aspects of the user (e.g., stats, info).
- *
- * @example
- * async function createUserProfile(userid) {
- *   const userAttributes = await generateUser(userid);
- *   console.log(userAttributes);
- *   // Additional code to use the userAttributes
- * }
+ * @param {string} [name] - An optional name for the user. If not provided, a random name is generated.
+ * @param {string} [username] - An optional username. If not provided, a sanitized version of the generated name is used as the username.
+ * @returns {Object} An object containing separate user attributes for statistics and information.
  */
-async function generateUser(userid: Number) {
-const fakeName = await axios.get('//api.name-fake.com/random/random');
-const rand25= Math.floor(Math.random() * 25)
-const attributesInit ={
+ function generateUser(name?: string, username?: string) {
+  const nameConfig: Config = {
+    dictionaries: [colors, adjectives, names],
+    separator: '-',
+  };
+
+  const fakeName = uniqueNamesGenerator(nameConfig);
+  //use fakename as primary key to prevent duplicates
+  const fakeUserName = fakeName.replace(/\s/g, '');
+  const rand25 = Math.floor(Math.random() * 25);
+  const attributesInit: UserAttributes = {
     count: {
-      PK: `u#${userid}`, // Partition key
+      PK: `u#${username ? username : fakeUserName}`, // Partition key
       SK: `"count"`, // Sort key for user's stats
       friendAmount: 0,
       postAmount: 0,
     },
     info: {
-      PK: `u#${userid}`, // Partition key
+      PK: `u#${username ? username : fakeUserName}`, // Partition key
       SK: `"info"`, // Sort key for user's info
-      name: `${fakeName}`,
-      content: `This is a bio of User #${userid}.`,
+      name: `${name ? name : fakeName}`,
+      content: `This is a bio of User #${username}.`,
       imageUrl: `https://xsgames.co/randomusers/assets/avatars/pixel/${rand25}.jpg`,
       status: `User hasn't posted a status`,
     },
+  };
+
+  return attributesInit;
 }
 
-return attributesInit
-    }
-
-    export default generateUser
+export default generateUser;

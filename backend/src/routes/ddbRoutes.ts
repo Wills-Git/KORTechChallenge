@@ -1,9 +1,9 @@
 import express, { Request, Response } from 'express';
-import docClient from '../config/ddbConnect';
+import { docClient } from '../config/ddbConnect';
 import validate from '../middleware/validate';
 
 const router = express.Router();
-const tname = 'SNS';
+const tname = 'KOR';
 // test ability to post data to local dynamodb instance
 router.post('/test', validate, async (req: Request, res: Response) => {
   try {
@@ -45,7 +45,7 @@ router.post('/test', validate, async (req: Request, res: Response) => {
       ExpressionAttributeNames: {
         '#name': 'name', //name is reserved keyword
       },
-      ProjectionExpression: 'PK, #name', 
+      ProjectionExpression: 'PK, #name',
     };
 
     const names = await docClient.scan(paramsNames).promise();

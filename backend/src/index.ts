@@ -3,7 +3,7 @@ import cors from 'cors';
 import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
 import ddbRoutes from './routes/ddbRoutes';
-import  WebSocket, {WebSocketServer} from 'ws'
+import WebSocket, { WebSocketServer } from 'ws';
 
 dotenv.config();
 
@@ -20,13 +20,13 @@ app.get('/', (req, res) => {
   res.send('Hello');
 });
 
-app.listen(port, () => {
+const server = app.listen(port, () => {
   console.log(`Server is listening at http://localhost:${port}`);
 });
 
 //websocket server
 
-const server = new WebSocketServer({port:port})
+const wsServer = new WebSocketServer({ server: server });
 
 server.on('connect', function connection(ws) {
   ws.on('error', console.error);
@@ -35,11 +35,9 @@ server.on('connect', function connection(ws) {
     console.log('received');
   });
 
-  ws.send('something');
-  server.clients.forEach( (client)=> {
+  wsServer.clients.forEach((client) => {
     if (client.readyState === WebSocket.OPEN) {
-      client.send('new status')
+      client.send('new status');
     }
-  })
-
+  });
 });
