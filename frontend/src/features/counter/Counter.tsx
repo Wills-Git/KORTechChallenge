@@ -1,6 +1,6 @@
 import { useState } from "react"
 
-import { useAppDispatch, useAppSelector } from "../../app/hooks.js"
+import { useAppDispatch, useAppSelector } from "../../redux/hooks.js"
 import styles from "./Counter.module.css"
 import {
   decrement,

@@ -4,6 +4,7 @@ import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
 import ddbRoutes from './routes/ddbRoutes';
 import WebSocket, { WebSocketServer } from 'ws';
+import { initializeDB } from './config/initializeDB';
 
 dotenv.config();
 
@@ -23,7 +24,7 @@ app.get('/', (req, res) => {
 const server = app.listen(port, () => {
   console.log(`Server is listening at http://localhost:${port}`);
 });
-
+initializeDB();
 //websocket server
 
 const wsServer = new WebSocketServer({ server: server });

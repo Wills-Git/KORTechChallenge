@@ -1,5 +1,5 @@
-import type { AppStore } from "../../app/store.js"
-import { makeStore } from "../../app/store.js"
+import type { AppStore } from "../../redux/store.js"
+import { makeStore } from "../../redux/store.js"
 import type { CounterSliceState } from "./counterSlice.js"
 import {
   counterSlice,

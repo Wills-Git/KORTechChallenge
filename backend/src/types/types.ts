@@ -1,3 +1,4 @@
+
 interface UserCountAttributes {
   PK: string; // Partition Key
   SK: string; // Sort Key
@@ -5,7 +6,7 @@ interface UserCountAttributes {
   postAmount: number;
 }
 
- interface UserInfoAttributes {
+interface UserInfoAttributes {
   PK: string; // Partition Key
   SK: string; // Sort Key
   name: string;
@@ -13,6 +14,7 @@ interface UserCountAttributes {
   imageUrl: string;
   status: string;
 }
+
 export interface AWSError {
   code?: string;
   message?: string;
@@ -21,6 +23,3 @@ export interface UserAttributes {
   count: UserCountAttributes;
   info: UserInfoAttributes;
 }
-
-
-

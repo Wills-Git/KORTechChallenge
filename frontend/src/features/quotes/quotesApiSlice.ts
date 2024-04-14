@@ -1,18 +1,7 @@
 // Need to use the React-specific entry point to import `createApi`
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
+import { UserInfoProps } from "../../types/types"
 
-interface Quote {
-  id: number
-  quote: string
-  author: string
-}
-
-interface QuotesApiResponse {
-  quotes: Quote[]
-  total: number
-  skip: number
-  limit: number
-}
 
 // Define a service using a base URL and expected endpoints
 export const quotesApiSlice = createApi({

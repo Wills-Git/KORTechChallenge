@@ -1,10 +1,9 @@
 import AWS from 'aws-sdk';
-import generateDummyTable from '../util/generateDummyTable';
 import { ServiceConfigurationOptions } from 'aws-sdk/lib/service';
 
 const accessKeyId = String(process.env.ACCESSKEY);
 const secretAccessKey = String(process.env.SECRETKEY);
-//use settings from env to configure connection to
+//use settings from env to configure connection to local dynamoDb Docker container
 const dummyCredentials = new AWS.Credentials({
   accessKeyId: accessKeyId,
   secretAccessKey: secretAccessKey,
@@ -31,4 +30,4 @@ export const docClient = new AWS.DynamoDB.DocumentClient({
 });
 
 //initializing table with dummy data if it isn't already present
-generateDummyTable();
+
