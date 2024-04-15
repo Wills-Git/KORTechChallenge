@@ -2,7 +2,8 @@ import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
-import ddbRoutes from './routes/ddbRoutes';
+import userRoutes from './routes/userRoutes';
+import friendRoutes from './routes/friendRoutes';
 import WebSocket, { WebSocketServer } from 'ws';
 import { initializeDB } from './config/initializeDB';
 
@@ -14,9 +15,9 @@ app.use(express.json());
 app.use(cors());
 app.use(bodyParser.json());
 
-app.use('/u', ddbRoutes);
+app.use('/u', userRoutes);
+app.use('/f', friendRoutes);
 const port = 3000;
-
 
 const server = app.listen(port, () => {
   console.log(`Server is listening at http://localhost:${port}`);

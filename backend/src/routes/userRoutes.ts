@@ -1,7 +1,7 @@
-import express, { Request, Response } from 'express';
+import express from 'express';
 import userDataController from '../controllers/userDataController';
-
 import validate from '../middleware/validate';
+
 
 const router = express.Router();
 
