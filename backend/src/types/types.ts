@@ -1,4 +1,3 @@
-
 interface UserCountAttributes {
   PK: string; // Partition Key
   SK: string; // Sort Key
@@ -19,6 +18,12 @@ export interface AWSError {
   code?: string;
   message?: string;
 }
+export type FriendStatusMap = {
+  requested: 'pending';
+  friends: 'friends';
+  blocked: 'blocker';
+  '': '';
+};
 export interface UserAttributes {
   count: UserCountAttributes;
   info: UserInfoAttributes;
