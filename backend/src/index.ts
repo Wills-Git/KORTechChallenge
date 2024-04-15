@@ -14,12 +14,9 @@ app.use(express.json());
 app.use(cors());
 app.use(bodyParser.json());
 
-app.use('/testconnection', ddbRoutes);
+app.use('/u', ddbRoutes);
 const port = 3000;
 
-app.get('/', (req, res) => {
-  res.send('Hello');
-});
 
 const server = app.listen(port, () => {
   console.log(`Server is listening at http://localhost:${port}`);

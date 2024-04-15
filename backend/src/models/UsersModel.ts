@@ -48,7 +48,6 @@ class UsersModel {
 
     try {
       await ddb.describeTable(params).promise();
-      console.log('table exists')
       return true; // if promise resolves, the table exists
     } catch (err) {
       const error = err as AWSError;
@@ -70,8 +69,9 @@ class UsersModel {
       },
       ExpressionAttributeNames: {
         '#name': 'name', //name is reserved keyword
+        '#status': 'status', //status is reserved keyword
       },
-      ProjectionExpression: 'PK, #name, imageUrl, content, status',
+      ProjectionExpression: 'PK, #name, imageUrl, content, #status',
     };
 
     const scanOutput: ScanOutput = await docClient.scan(paramsNames).promise();

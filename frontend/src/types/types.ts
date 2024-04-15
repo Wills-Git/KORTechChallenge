@@ -1,4 +1,4 @@
-type UserInfoType = {
+export type UserInfoType = {
   PK: string
   name: string
   content: string
