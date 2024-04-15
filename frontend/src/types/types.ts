@@ -12,6 +12,11 @@ export type UserCreationType = {
   name: string
   username: string
 }
+export type FriendStatusType = {
+  PK: string
+  SK: string
+  Status: string
+}
 
 export interface UserInfoProps {
   userInfo: UserInfoType
