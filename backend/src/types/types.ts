@@ -21,7 +21,7 @@ export interface AWSError {
 export type FriendStatusMap = {
   requested: 'pending';
   friends: 'friends';
-  blocked: 'blocker';
+  block: 'blocked';
   '': '';
 };
 export interface UserAttributes {

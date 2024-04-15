@@ -15,14 +15,14 @@ const friendDataController = {
     res: Response,
     next: NextFunction
   ) => {
-    const { userPK, otherUserPK, status } = req.body;
+    const { userPK, requestedUserPK, status } = req.body;
     const friendStatusMap: FriendStatusMap = {
       // request sent, requested user has pending status
       requested: 'pending',
       // request accepted
       friends: 'friends',
       // one user blocks another
-      blocked: 'blocker',
+      block: 'blocked',
       // requested declines, status is wiped
       '': '',
     };
@@ -39,21 +39,21 @@ const friendDataController = {
       TableName: String(process.env.TABLENAME),
       Item: {
         PK: { S: `u#${userPK}#friendstatus` },
-        SK: { S: `u#${otherUserPK}` },
+        SK: { S: `u#${requestedUserPK}` },
         Status: { S: `${status}` },
       },
     };
-    const otherUserParams = {
+    const requestedUserParams = {
       TableName: String(process.env.TABLENAME),
       Item: {
-        PK: { S: `u#${otherUserPK}#friendstatus` },
+        PK: { S: `u#${requestedUserPK}#friendstatus` },
         SK: { S: `u#${userPK}` },
         Status: { S: `${friendStatusMap[status]}` },
       },
     };
     try {
       await ddb.putItem(userParams);
-      await ddb.putItem(otherUserParams);
+      await ddb.putItem(requestedUserParams);
       res.status(200);
       console.log('Friend status updated');
     } catch (error) {
