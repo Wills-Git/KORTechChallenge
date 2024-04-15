@@ -3,8 +3,13 @@ import { AWSError } from '../types/types';
 import { ddb } from '../config/ddbConnect';
 import { docClient } from '../config/ddbConnect';
 import { ScanOutput } from 'aws-sdk/clients/dynamodb';
+import UsersDataService from '../services/usersDataService';
 
 class UsersModel {
+  private userDataService: UsersDataService;
+  constructor() {
+    this.userDataService = new UsersDataService();
+  }
   /**
    * Inserts a new user into the specified DynamoDB table using a transaction to ensure atomicity.
    * This function attempts to write both 'count' and 'info' attributes of a user atomically.
