@@ -1,10 +1,10 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
-import type { UserInfoType } from "@/types/types.ts"
+import type { UserCreationType, UserInfoType } from "@/types/types.ts"
 
 export const usersApiSlice = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: "http://localhost:3000/u/" }),
   reducerPath: "UsersApi",
-  tagTypes: ["allUsers", "User"], // Added a tag type for individual user operations
+  tagTypes: ["User", "allUsers"],
   endpoints: build => ({
     getAllUsers: build.query<UserInfoType[], void>({
       query: () => `allusers`,
@@ -14,10 +14,41 @@ export const usersApiSlice = createApi({
     }),
     getUserByPK: build.query<UserInfoType, string>({
       query: pk => `${pk}`,
-      providesTags: (result, error, pk) => [{ type: "User", pk }],
+      //if there is a user returned, they are assigned tags, otherwise no tags
+      providesTags: (result, error, pk) =>
+        result ? [{ type: "User", id: result.PK }] : [],
+    }),
+    createUser: build.mutation<UserInfoType, UserCreationType>({
+      query: userDetails => ({
+        url: "newuser",
+        method: "POST",
+        body: userDetails,
+      }),
+      //instead of invalidating allUsers, an expensive backend call, update its cache with new user
+      onQueryStarted: async (newUserData, { dispatch, queryFulfilled }) => {
+        try {
+          const { data: newUser } = await queryFulfilled
+          console.log(newUser)
+          dispatch(
+            usersApiSlice.util.updateQueryData(
+              "getAllUsers",
+              undefined,
+              (draft: UserInfoType[]) => {
+                draft.push(newUser)
+              },
+            ),
+          )
+        } catch (error) {
+          console.log("error updating cache with new user", error, newUserData)
+        }
+      },
     }),
   }),
 })
 
-// Exporting hooks for both queries
-export const { useGetAllUsersQuery, useGetUserByPKQuery } = usersApiSlice
+// Exporting hooks for queries and mutations
+export const {
+  useGetAllUsersQuery,
+  useGetUserByPKQuery,
+  useCreateUserMutation,
+} = usersApiSlice

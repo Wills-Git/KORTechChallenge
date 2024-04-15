@@ -2,9 +2,14 @@ import { UserAttributes } from '../types/types';
 import { AWSError } from '../types/types';
 import { ddb } from '../config/ddbConnect';
 import { docClient } from '../config/ddbConnect';
-import { ScanOutput } from 'aws-sdk/clients/dynamodb';
+import { ScanOutput, QueryOutput } from 'aws-sdk/clients/dynamodb';
+import UsersDataService from '../services/usersDataService';
 
 class UsersModel {
+  private userDataService: UsersDataService;
+  constructor() {
+    this.userDataService = new UsersDataService();
+  }
   /**
    * Inserts a new user into the specified DynamoDB table using a transaction to ensure atomicity.
    * This function attempts to write both 'count' and 'info' attributes of a user atomically.
@@ -28,10 +33,14 @@ class UsersModel {
       ],
     };
     try {
+      if (await this.checkUserExists(user.info.PK)) {
+        throw new Error('User Already Exists');
+      }
       await docClient.transactWrite(transactParams).promise();
       console.log('Transaction Successful');
     } catch (error) {
       console.error('Transaction Failed:', error);
+      throw error;
     }
   }
 
@@ -61,7 +70,7 @@ class UsersModel {
   }
 
   async getAllUsers() {
-    const paramsNames = {
+    const params = {
       TableName: String(process.env.TABLENAME),
       FilterExpression: 'SK = :skValue',
       ExpressionAttributeValues: {
@@ -74,9 +83,24 @@ class UsersModel {
       ProjectionExpression: 'PK, #name, imageUrl, content, #status',
     };
 
-    const scanOutput: ScanOutput = await docClient.scan(paramsNames).promise();
+    const scanOutput: ScanOutput = await docClient.scan(params).promise();
 
     return scanOutput.Items;
+  }
+
+  async checkUserExists(PK: string) {
+    const params = {
+      TableName: String(process.env.TABLENAME),
+      KeyConditionExpression: 'PK = :pk',
+      ExpressionAttributeValues: {
+        ':pk': PK,
+      },
+      ProjectionExpression: 'PK',
+    };
+    const result: QueryOutput = await docClient.query(params).promise();
+    // If the query finds any items, it means the user exists.
+    const exists: boolean = result.Items?.length ? true : false;
+    return exists;
   }
 }
 export default UsersModel;

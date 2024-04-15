@@ -26,6 +26,11 @@ const userDataController = {
       res.status(200).json(response);
     } catch (error) {
       console.error('Error creating user:', error);
+      let errorMessage = 'unknown error';
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      }
+      res.status(500).json(errorMessage);
     }
   },
 
