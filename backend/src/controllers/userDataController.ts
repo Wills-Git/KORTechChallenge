@@ -19,13 +19,11 @@ const userDataController = {
         name,
         username
       );
+      const response = user.info;
       // Insert user into the database with transaction
       await usersModel.insertUserWithTransaction(user);
       // Send a successful response back to the client
-      res.status(200).json({
-        message: 'User created successfully',
-        user,
-      });
+      res.status(200).json(response);
     } catch (error) {
       console.error('Error creating user:', error);
     }
