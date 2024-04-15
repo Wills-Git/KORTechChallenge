@@ -2,6 +2,22 @@ import type { FC } from "react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar.tsx"
 import type { UserInfoProps } from "@/types/types.ts"
 import { Button } from "@/components/ui/button.tsx"
+import {
+  CardTitle,
+  CardDescription,
+  CardHeader,
+  CardContent,
+  Card,
+} from "@/components/ui/card.tsx"
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet.tsx"
+import ProfileCard from "../ProfileCard/ProfileCard.tsx"
 
 const UserCard: FC<UserInfoProps> = ({ userInfo }) => {
   return (
@@ -11,12 +27,23 @@ const UserCard: FC<UserInfoProps> = ({ userInfo }) => {
         <AvatarFallback>😃</AvatarFallback>
       </Avatar>
       <div className="grid  gap-3">
-        <p className="text-sm font-medium text-pretty text-nowrap text-clip leading-none">
+        <p className="text-sm font-medium text-pretty text-clip leading-none">
           {userInfo.name}
         </p>
         <p className="text-sm text-muted-foreground">{userInfo.status}</p>
       </div>
-      <Button variant="outline"> + </Button>
+      {/* Sheet modal for profile */}
+      <Sheet>
+        <SheetTrigger asChild>
+          <Button variant="outline"> o </Button>
+        </SheetTrigger>
+        <SheetContent className="w-[400px] sm:w-[540px]">
+          <SheetHeader>
+            <SheetTitle>User Profile</SheetTitle>
+            <ProfileCard userInfo={userInfo} />
+          </SheetHeader>
+        </SheetContent>
+      </Sheet>
     </div>
   )
 }

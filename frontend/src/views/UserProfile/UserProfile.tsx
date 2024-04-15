@@ -6,12 +6,12 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from "@/components/ui/sheet"
+} from "@/components/ui/sheet.tsx"
 
 import { useParams } from "react-router-dom"
 
 function UserProfile() {
-    //get userid from params to query for users information in db
+  //get userid from params to query for users information in db
   const { userid } = useParams()
   return (
     <>
