@@ -8,8 +8,7 @@ export const friendsApiSlice = createApi({
   endpoints: build => ({
     updateFriendStatus: build.mutation<
       void,
-      { userPK: string; requestedUserPK: string; status: string }
-    >({
+      { userPK: string; requestedUserPK: string; status: string }>({
       query: ({ userPK, requestedUserPK, status }) => ({
         url: "updatefriend",
         method: "POST",

@@ -10,5 +10,18 @@
 - usecase for redux here is mostly presentation level, although there are cases here for performance. Will also be using RTK query.
 - tailwind is fine (personally I have more experience with modular css but I've been enjoying tailwind lately. great article that conviced me on it a while ago: [link](https://adamwathan.me/css-utility-classes-and-separation-of-concerns/))
 
-## 4/14 - Working on frontend, changing my layout idea
-I've decided to change from a 'view' based frontend architecture to a single-page with conditional rendering for components
+## 4/14 4 hours - Working on frontend, changing my layout idea
+I've decided to change from a 'view' based frontend architecture to a single-page with conditional rendering for components.
+Going with a side sheet for other user profiles, and converting login sidebar for the current user profile/feed on login. 
+User profile card at top with status, account interaction buttons below, post feed below that
+Architecture is a bit simpler but page rendering may suffer from the amount of components on screen. 
+
+**assumptions**:
+- none to mention at the moment
+
+*recent thoughts*:
+- I'm using a single table ddb design and I weighed using a u#userPK#Friendlist : SK#(other users PKs) against what I've ultimately gone with, using u#${userPK}#friendstatus : SK `u#${requestedUserPK}` with a friend status attribute. I believe the operations for updating and deleting the first approach would be more prone to error, harder to consume, and possibly more expensive. I also considered GSIs but decided the current approach is sufficient and flexible.
+- Extended the shadcn toast component easily, adding a 'positive' variant. There was some pain in the setup of shadcn but it's a flexible component library, and I like that it uses Radix primitives. 
+- I'm using the u#PK of each user as the unique key for react components - I would not do that in production for security reasons, instead would use a uuid, or perhaps hash the PK.
+
+## 4/15 5 hours - Working on presentation, styling

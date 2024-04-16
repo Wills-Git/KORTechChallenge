@@ -3,21 +3,14 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar.tsx"
 import type { UserInfoProps } from "@/types/types.ts"
 import { Button } from "@/components/ui/button.tsx"
 import {
-  CardTitle,
-  CardDescription,
-  CardHeader,
-  CardContent,
-  Card,
-} from "@/components/ui/card.tsx"
-import {
   Sheet,
   SheetContent,
-  SheetDescription,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet.tsx"
 import ProfileCard from "../ProfileCard/ProfileCard.tsx"
+import PostsList from "../PostsList.tsx/PostsList.tsx"
 
 const UserCard: FC<UserInfoProps> = ({ userInfo }) => {
   return (
@@ -26,7 +19,7 @@ const UserCard: FC<UserInfoProps> = ({ userInfo }) => {
         <AvatarImage src={userInfo.imageUrl} alt="Avatar" />
         <AvatarFallback>😃</AvatarFallback>
       </Avatar>
-      <div className="grid  gap-3">
+      <div className="flex flex-col items-center gap-3">
         <p className="text-sm font-medium text-pretty text-clip leading-none">
           {userInfo.name}
         </p>
@@ -37,11 +30,12 @@ const UserCard: FC<UserInfoProps> = ({ userInfo }) => {
         <SheetTrigger asChild>
           <Button variant="outline"> o </Button>
         </SheetTrigger>
-        <SheetContent className="w-[400px] sm:w-[540px]">
+        <SheetContent className="h-full flex flex-col items-centergap-5">
           <SheetHeader>
-            <SheetTitle>User Profile</SheetTitle>
+            <SheetTitle className="text-center">User Profile</SheetTitle>
             <ProfileCard userInfo={userInfo} />
           </SheetHeader>
+          <PostsList />
         </SheetContent>
       </Sheet>
     </div>

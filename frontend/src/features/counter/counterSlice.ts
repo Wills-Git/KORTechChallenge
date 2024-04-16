@@ -77,15 +77,15 @@ export const { decrement, increment, incrementByAmount, incrementAsync } =
 export const { selectCount, selectStatus } = counterSlice.selectors
 
 // We can also write thunks by hand, which may contain both sync and async logic.
-// Here's an example of conditionally dispatching actions based on current state.
-export const incrementIfOdd =
-  (amount: number): AppThunk =>
-  (dispatch, getState) => {
-    const currentValue = selectCount(
-      getState() as { counter: CounterSliceState },
-    )
+// // Here's an example of conditionally dispatching actions based on current state.
+// export const incrementIfOdd =
+//   (amount: number): AppThunk =>
+//   (dispatch, getState) => {
+//     const currentValue = selectCount(
+//       getState() as { counter: CounterSliceState },
+//     )
 
-    if (currentValue % 2 === 1 || currentValue % 2 === -1) {
-      dispatch(incrementByAmount(amount))
-    }
-  }
+//     if (currentValue % 2 === 1 || currentValue % 2 === -1) {
+//       dispatch(incrementByAmount(amount))
+//     }
+//   }

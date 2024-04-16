@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { ddb } from '../config/ddbConnect';
-import { PutItemInput } from 'aws-sdk/clients/dynamodb';
+import { PutItemInput, QueryInput } from 'aws-sdk/clients/dynamodb';
 import { FriendStatusMap } from '../types/types';
 
 const friendDataController = {
@@ -58,6 +58,37 @@ const friendDataController = {
       console.log('Friend status updated');
     } catch (error) {
       console.error('Failed update friend status:', error);
+      let errorMessage = 'unknown error';
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      }
+      res.status(500).json(errorMessage);
+    }
+  },
+  /**
+   * Retrieves all friend statuses for a specific user.
+   * @param {string} userPk - The partition key of the user whose friend statuses are being queried.
+   * @returns {Promise} A promise that resolves with the list of all friend statuses.
+   */
+  getAllFriendStatuses: async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    const { userPK } = req.params;
+    const queryParams: QueryInput = {
+      TableName: String(process.env.TABLENAME),
+      KeyConditionExpression: 'PK = :pk and begins_with(SK, :skPrefix)',
+      ExpressionAttributeValues: {
+        ':pk': { S: `u#${userPK}#friendstatus` },
+        ':skPrefix': { S: 'u#' },
+      },
+    };
+
+    try {
+      const data = await ddb.query(queryParams).promise();
+      res.status(200).json(data.Items);
+    } catch (error) {
       let errorMessage = 'unknown error';
       if (error instanceof Error) {
         errorMessage = error.message;

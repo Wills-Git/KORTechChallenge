@@ -78,7 +78,7 @@ class UsersModel {
       },
       ProjectionExpression: 'PK, #name, imageUrl, content, #status',
     };
-
+ 
     const scanOutput: ScanOutput = await docClient.scan(params).promise();
 
     return scanOutput.Items;
