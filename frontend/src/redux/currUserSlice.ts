@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit"
 import type { UserInfoType } from "../types/types.ts"
 import type { PayloadAction } from "@reduxjs/toolkit"
 import type { CurrUserState } from "../types/types.ts"
+import { usersApiSlice } from "./usersApiSlice.ts"
 
 const initialState: CurrUserState = {
   isLoggedIn: false,
@@ -20,6 +21,16 @@ const currUserSlice = createSlice({
       state.isLoggedIn = false
       state.user = null
     },
+  },
+  extraReducers: builder => {
+    builder.addMatcher(
+      usersApiSlice.endpoints.updateUserStatus.matchFulfilled,
+      (state, { payload }) => {
+        if (state.user && state.user.PK === payload.PK) {
+          state.user.status = payload.status
+        }
+      },
+    )
   },
 })
 

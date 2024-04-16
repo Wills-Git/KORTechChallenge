@@ -1,9 +1,13 @@
 .layout {
-    display: grid;
-    grid:
+  display: grid;
+  grid:
     "sidebar users" 1fr
-    / auto 1fr;
-    gap: 1rem;
+    / 1fr;
+  gap: 1rem;
 }
-.sidebar { grid-area: sidebar; }
-.users { grid-area: users; }
+.sidebar {
+  grid-area: sidebar;
+}
+.users {
+  grid-area: users;
+}

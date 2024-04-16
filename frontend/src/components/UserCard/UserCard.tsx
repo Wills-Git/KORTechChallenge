@@ -13,6 +13,8 @@ import ProfileCard from "../ProfileCard/ProfileCard.tsx"
 import PostsList from "../PostsList/PostsList.tsx"
 
 const UserCard: FC<UserInfoProps> = ({ userInfo }) => {
+  const userHasDefaultStatus = userInfo.status === "User hasn't posted a status"
+
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -25,7 +27,11 @@ const UserCard: FC<UserInfoProps> = ({ userInfo }) => {
             <p className="text-sm font-semibold text-foreground">
               {userInfo.name}
             </p>
-            <p className="text-xs text-muted-foreground">{userInfo.status}</p>
+            <p
+              className={`text-xs ${userHasDefaultStatus ? "text-muted-foreground" : "text-black"} `}
+            >
+              {userInfo.status}
+            </p>
           </div>
         </div>
       </SheetTrigger>

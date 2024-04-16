@@ -43,6 +43,31 @@ export const usersApiSlice = createApi({
         }
       },
     }),
+    updateUserStatus: build.mutation<
+      UserInfoType,
+      { pk: string; status: string }
+    >({
+      query: ({ pk, status }) => ({
+        url: `update/${pk}`,
+        method: "PATCH",
+        body: { status },
+      }),
+      invalidatesTags: (result, error, { pk }) => [{ type: "User", id: pk }],
+      async onQueryStarted({ pk, status }, { dispatch, queryFulfilled }) {
+        const patchResult = dispatch(
+          usersApiSlice.util.updateQueryData("getUserByPK", pk, draftUser => {
+            if (draftUser) {
+              draftUser.status = status
+            }
+          }),
+        )
+        try {
+          await queryFulfilled
+        } catch {
+          patchResult.undo()
+        }
+      },
+    }),
   }),
 })
 

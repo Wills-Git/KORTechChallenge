@@ -12,6 +12,7 @@ import {
 import { Badge } from "../ui/badge.tsx"
 
 const ProfileCard: FC<UserInfoProps> = ({ userInfo }) => {
+  const userHasDefaultStatus = userInfo.status === "User hasn't posted a status"
   return (
     <Card className="mx-auto max-w-sm">
       <CardHeader className="space-y-1 flex flex-col items-center">
@@ -21,15 +22,19 @@ const ProfileCard: FC<UserInfoProps> = ({ userInfo }) => {
         <CardDescription>{userInfo.PK}</CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col items-center space-y-4">
-        <Avatar className="hidden h-20 w-20 sm:flex">
+        <Avatar className="hidden h-20 w-20 sm:flex  shadow-xl border">
           <AvatarImage src={userInfo.imageUrl} alt="Avatar" />
           <AvatarFallback>😃</AvatarFallback>
         </Avatar>
         <div className="flex flex-col items-center gap-4">
-          <Badge className="drop-shadow-lg">Status</Badge>
-          <Card>
-            <CardContent className="">
-              <small className="w-full max-w-full whitespace-normal break-all text-xs font-medium leading-none">
+          <Badge className="drop-shadow-lg bg-muted bg-gradient-to-br text-muted-foreground">
+            Offline
+          </Badge>
+          <Card className="">
+            <CardContent className="px-5 pt-2 pb-4">
+              <small
+                className={`w-full max-w-full whitespace-normal break-all text-xs font-medium leading-none ${userHasDefaultStatus ? "text-muted-foreground" : "text-black"}`}
+              >
                 {userInfo.status}
               </small>
             </CardContent>
