@@ -23,7 +23,7 @@ class UsersDataService {
    */
   generateUser(name?: string, username?: string): UserAttributes {
     const nameConfig: Config = {
-      dictionaries: [colors, adjectives, names],
+      dictionaries: [colors, names],
       separator: '-',
     };
 

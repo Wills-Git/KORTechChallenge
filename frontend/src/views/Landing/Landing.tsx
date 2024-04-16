@@ -9,7 +9,9 @@ function Landing() {
         <div className="sidebar">
           <LoginForm />
         </div>
-        <UserList />
+        <div className="users flex justify-center align-middle items-center text-center">
+          <UserList />
+        </div>
       </div>
     </>
   )

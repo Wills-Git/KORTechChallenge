@@ -16,12 +16,15 @@ interface Post {
 }
 
 const PostsList: FC = () => {
-  const dummyPost: Post = {
-    id: Math.floor(Math.random() * 1000),
-    title: "Dummy Post",
-    content: `${Array(Math.floor(Math.random() * 50)).fill("Here are my thoughts ")}`,
+  const dummyPosts = []
+  for (let i = 1; i <= 50; i++) {
+    const dummyPost: Post = {
+      id: i,
+      title: "Dummy Post",
+      content: `${Array(Math.floor(Math.random() * 50)).fill("Here are my thoughts ")}`,
+    }
+    dummyPosts.push(dummyPost)
   }
-  const dummyPosts = Array(50).fill(dummyPost)
   return (
     <ScrollArea className="h-full overflow-y-auto rounded-md border">
       {" "}

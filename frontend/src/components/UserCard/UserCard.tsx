@@ -10,35 +10,37 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet.tsx"
 import ProfileCard from "../ProfileCard/ProfileCard.tsx"
-import PostsList from "../PostsList.tsx/PostsList.tsx"
+import PostsList from "../PostsList/PostsList.tsx"
 
 const UserCard: FC<UserInfoProps> = ({ userInfo }) => {
   return (
-    <div className="flex items-center place-content-center border-red-100 border-2  gap-4">
-      <Avatar className="hidden h-10 w-10 sm:flex">
-        <AvatarImage src={userInfo.imageUrl} alt="Avatar" />
-        <AvatarFallback>😃</AvatarFallback>
-      </Avatar>
-      <div className="flex flex-col items-center gap-3">
-        <p className="text-sm font-medium text-pretty text-clip leading-none">
-          {userInfo.name}
-        </p>
-        <p className="text-sm text-muted-foreground">{userInfo.status}</p>
-      </div>
-      {/* Sheet modal for profile */}
-      <Sheet>
-        <SheetTrigger asChild>
-          <Button variant="outline"> o </Button>
-        </SheetTrigger>
-        <SheetContent className="h-full flex flex-col items-centergap-5">
-          <SheetHeader>
-            <SheetTitle className="text-center">User Profile</SheetTitle>
-            <ProfileCard userInfo={userInfo} />
-          </SheetHeader>
-          <PostsList />
-        </SheetContent>
-      </Sheet>
-    </div>
+    <Sheet>
+      <SheetTrigger asChild>
+        <div className=" animate-in flex items-center justify-center p-4 bg-card shadow-sm rounded-lg border-border border-solid border transition-transform transform-gpu hover:-translate-y-1 hover:shadow-lg cursor-pointer">
+          <Avatar className="flex justify-center items-center h-10 w-10 rounded-full overflow-hidden shadow-sm bg-background">
+            <AvatarImage src={userInfo.imageUrl} alt="Avatar" />
+            <AvatarFallback>😃</AvatarFallback>
+          </Avatar>
+          <div className="flex flex-col items-center ml-4">
+            <p className="text-sm font-semibold text-foreground">
+              {userInfo.name}
+            </p>
+            <p className="text-xs text-muted-foreground">{userInfo.status}</p>
+          </div>
+        </div>
+      </SheetTrigger>
+      <SheetContent className="h-auto w-full max-w-md p-5 bg-popover rounded-lg shadow-xl text-popover-foreground">
+        <SheetHeader>
+          <SheetTitle className="text-lg font-bold text-center">
+            User Profile
+          </SheetTitle>
+        </SheetHeader>
+        <div className="my-4">
+          <ProfileCard userInfo={userInfo} />
+        </div>
+        <PostsList />
+      </SheetContent>
+    </Sheet>
   )
 }
 
