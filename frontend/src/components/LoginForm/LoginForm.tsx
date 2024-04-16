@@ -1,43 +1,88 @@
+import { FC, useState, useEffect } from "react"
 import {
+  Card,
   CardTitle,
   CardDescription,
   CardHeader,
   CardContent,
-  Card,
 } from "@/components/ui/card.tsx"
 import { Label } from "@/components/ui/label.tsx"
 import { Input } from "@/components/ui/input.tsx"
 import { Button } from "@/components/ui/button.tsx"
-import { useCreateUserMutation } from "@/redux/usersApiSlice.ts"
-import { useGetAllUsersQuery } from "@/redux/usersApiSlice.ts"
-import { useState, useEffect } from "react"
+import {
+  useCreateUserMutation,
+  useGetAllUsersQuery,
+} from "@/redux/usersApiSlice.ts"
 import { useToast } from "../ui/use-toast.ts"
 import useReduxErrorToast from "@/hooks/useReduxErrorToast.tsx"
+import { loginSuccess } from "@/redux/currUserSlice.ts"
+import { useAppDispatch } from "@/redux/hooks.ts"
 import type { UserInfoType } from "@/types/types.ts"
 import { useDebouncedCallback } from "use-debounce"
 
-export default function LoginForm() {
+export default function AuthForm() {
   const [username, setUsername] = useState("")
   const [name, setName] = useState("")
-  const [isSigningUp, setIsSigninUp] = useState(false)
+  const [isSigningUp, setIsSigningUp] = useState(false)
   const [isNameAvailable, setIsNameAvailable] = useState(true)
 
-  const [createUser, { error, isLoading, isSuccess, isError }] =
-    useCreateUserMutation()
+  const [createUser, { error, isError }] = useCreateUserMutation()
   const { data: allUsers } = useGetAllUsersQuery()
-
   const { toast } = useToast()
-  //signup errors are handled with this hook
   useReduxErrorToast(error, isError)
+  const dispatch = useAppDispatch()
 
   const handleSignup = async () => {
-    await createUser({ username, name }).unwrap()
-    toast({
-      variant: "positive",
-      title: "Signup successful",
-      description: "You have been signed up successfully!",
-    })
-    setIsSigninUp(false)
+    // Validate username length
+    if (username.length < 3 || username.length > 20) {
+      toast({
+        variant: "destructive",
+        title: "Signup Failed",
+        description: "Username must be between 3 and 20 characters long.",
+      })
+      return // Stop the signup process if validation fails
+    }
+
+    try {
+      const response: UserInfoType = await createUser({
+        username,
+        name,
+      }).unwrap()
+      toast({
+        variant: "positive",
+        title: "Signup successful",
+        description: "You have been signed up successfully!",
+      })
+      setIsSigningUp(false)
+      dispatch(loginSuccess({ user: response }))
+    } catch (error) {
+      // Handle possible errors from the createUser function
+      toast({
+        variant: "destructive",
+        title: "Signup Error",
+        description: "An error occurred during signup. Please try again later.",
+      })
+    }
+  }
+
+  const handleLogin = () => {
+    const user: UserInfoType | undefined = allUsers?.find(
+      u => u.PK.substring(2) === username,
+    )
+    if (user) {
+      dispatch(loginSuccess({ user }))
+      setUsername("")
+      setName("")
+    } else {
+      toast({
+        variant: "destructive",
+        title: "Login Failed",
+        description:
+          "No account found with that username. Please try again or sign up.",
+      })
+      setUsername("")
+      setName("")
+    }
   }
 
   const checkIfDisplayNameTaken = (
@@ -59,9 +104,13 @@ export default function LoginForm() {
   return (
     <Card className="mx-auto max-w-sm">
       <CardHeader className="space-y-1">
-        <CardTitle className="text-2xl font-bold">Login</CardTitle>
+        <CardTitle className="text-2xl font-bold">
+          {isSigningUp ? "Sign Up" : "Login"}
+        </CardTitle>
         <CardDescription>
-          Enter your username to login to your account
+          {isSigningUp
+            ? "Create your account"
+            : "Enter your username to login to your account"}
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -76,7 +125,7 @@ export default function LoginForm() {
               value={username}
               onChange={e => setUsername(e.target.value)}
             />
-            {isSigningUp ? (
+            {isSigningUp && (
               <>
                 <Label htmlFor="displayname">Display Name</Label>
                 <Input
@@ -88,22 +137,18 @@ export default function LoginForm() {
                   type="text"
                 />
               </>
-            ) : (
-              <></>
             )}
           </div>
           <div className="space-y-1">
             {!isSigningUp ? (
               <>
-                <Button className="w-full" type="submit">
+                <Button className="w-full" type="button" onClick={handleLogin}>
                   Login
                 </Button>
                 <Button
                   className="w-full"
-                  onClick={() => {
-                    setIsSigninUp(true)
-                  }}
-                  type="submit"
+                  type="button"
+                  onClick={() => setIsSigningUp(true)}
                 >
                   Signup
                 </Button>
@@ -118,9 +163,16 @@ export default function LoginForm() {
                 >
                   Submit
                 </Button>
+                <Button
+                  className="w-full"
+                  onClick={() => setIsSigningUp(false)}
+                  type="button"
+                >
+                  Cancel Signup
+                </Button>
                 {!isNameAvailable && (
                   <Label className="text-red-500 text-xs" htmlFor="error">
-                    that display name is already being used
+                    That display name is already being used
                   </Label>
                 )}
               </>

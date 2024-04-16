@@ -28,4 +28,9 @@ interface SerializedError {
   code?: string
 }
 
+export interface CurrUserState {
+  isLoggedIn: boolean
+  user: UserInfoType | null
+}
+
 export type ReduxError = FetchBaseQueryError | SerializedError | undefined
