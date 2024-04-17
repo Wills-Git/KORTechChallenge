@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
-import { ddb } from '../config/ddbConnect';
-import { PutItemInput, QueryInput } from 'aws-sdk/clients/dynamodb';
+import { docClient, ddb } from '../config/ddbConnect';
+import { PutItemInput, QueryInput, Put } from 'aws-sdk/clients/dynamodb';
 import { FriendStatusMap } from '../types/types';
 
 const friendDataController = {
@@ -16,6 +16,8 @@ const friendDataController = {
     next: NextFunction
   ) => {
     const { userPK, requestedUserPK, status } = req.body;
+
+    console.log(userPK, requestedUserPK, status);
     const friendStatusMap: FriendStatusMap = {
       // request sent, requested user has pending status
       requested: 'pending',
@@ -35,27 +37,29 @@ const friendDataController = {
       res.status(400).send('Invalid friend status');
       return;
     }
-    const userParams: PutItemInput = {
+    const userParams = {
       TableName: String(process.env.TABLENAME),
       Item: {
-        PK: { S: `u#${userPK}#friendstatus` },
-        SK: { S: `u#${requestedUserPK}` },
-        Status: { S: `${status}` },
+        PK: `${userPK}#friendstatus`,
+        SK: requestedUserPK,
+        Status: status,
       },
     };
     const requestedUserParams = {
       TableName: String(process.env.TABLENAME),
       Item: {
-        PK: { S: `u#${requestedUserPK}#friendstatus` },
-        SK: { S: `u#${userPK}` },
-        Status: { S: `${friendStatusMap[status]}` },
+        PK: `${requestedUserPK}#friendstatus`,
+        SK: userPK,
+        Status: friendStatusMap[status],
       },
     };
+    const params = {
+      TransactItems: [{ Put: userParams }, { Put: requestedUserParams }],
+    };
+
     try {
-      await ddb.putItem(userParams);
-      await ddb.putItem(requestedUserParams);
-      res.status(200);
-      console.log('Friend status updated');
+      await docClient.transactWrite(params).promise();
+      res.status(200).json(userPK); //send back userPK for redux to use with invalidating cache
     } catch (error) {
       console.error('Failed update friend status:', error);
       let errorMessage = 'unknown error';
@@ -80,13 +84,14 @@ const friendDataController = {
       TableName: String(process.env.TABLENAME),
       KeyConditionExpression: 'PK = :PK and begins_with(SK, :skPrefix)',
       ExpressionAttributeValues: {
-        ':PK': { S: `u#${userPK}#friendstatus` },
+        ':PK': { S: `${userPK}#friendstatus` },
         ':skPrefix': { S: 'u#' },
       },
     };
 
     try {
       const data = await ddb.query(queryParams).promise();
+      console.log('friend data', data);
       res.status(200).json(data.Items);
     } catch (error) {
       let errorMessage = 'unknown error';

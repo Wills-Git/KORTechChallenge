@@ -32,11 +32,11 @@ class UsersModel {
       ],
     };
     try {
+        //prevents duplicate users
       if (await this.checkUserExists(user.info.PK)) {
         throw new Error('User Already Exists');
       }
       await docClient.transactWrite(transactParams).promise();
-      console.log('Transaction Successful');
     } catch (error) {
       console.error('Transaction Failed:', error);
       throw error;
@@ -48,7 +48,6 @@ class UsersModel {
  * @param {string} tableName - The name of the table to check.
  
  */
-
   async checkTableExists(tableName: string): Promise<boolean> {
     const params = {
       TableName: tableName,

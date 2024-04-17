@@ -1,4 +1,5 @@
-import { useState, memo } from "react"
+import { useState, useEffect, memo } from "react"
+import { SkipToken, skipToken } from "@reduxjs/toolkit/query"
 import { useAppSelector } from "@/redux/hooks.ts"
 import { useAppDispatch } from "@/redux/hooks.ts"
 import { useUpdateUserStatusMutation } from "@/redux/usersApiSlice.ts"
@@ -19,16 +20,24 @@ import PostsList from "../PostsList/PostsList.tsx"
 import { logout } from "@/redux/currUserSlice.ts"
 import useReduxErrorToast from "@/hooks/useReduxErrorToast.tsx"
 import { useToast } from "../ui/use-toast.ts"
-
-
+import { useGetAllFriendStatusesQuery } from "@/redux/friendsApiSlice.ts"
 
 const MemoizedPostsList = memo(PostsList) //prevents rerendering when parent is rerendered, must be declared outside component
 export const CurrUserDashboard: FC = () => {
   const [newStatus, setNewStatus] = useState("")
   const currUser = useAppSelector(state => state.currUser.user)
   const dispatch = useAppDispatch()
-  const [updateUserStatus, { isLoading, isSuccess, isError, error }] =
+  const [updateUserStatus, { isLoading, isError, error }] =
     useUpdateUserStatusMutation()
+
+  const { refetch } = useGetAllFriendStatusesQuery(currUser?.PK ?? skipToken) //skips query if PK is undefined
+
+  useEffect(() => {
+    
+    if (currUser?.PK) {
+      refetch() // manual refetch all friend statuses when user logs in, e.g. switching users
+    }
+  }, [currUser?.PK, refetch])
 
   //toasts for errors and successes
   useReduxErrorToast(error, isError)
@@ -38,7 +47,7 @@ export const CurrUserDashboard: FC = () => {
 
   const handleUpdateStatus = () => {
     if (currUser && newStatus) {
-    updateUserStatus({ PK: currUser.PK, status: newStatus })
+      updateUserStatus({ PK: currUser.PK, status: newStatus })
     } else {
       toast({
         variant: "destructive",
@@ -57,7 +66,6 @@ export const CurrUserDashboard: FC = () => {
   if (!currUser) {
     return <div>Your dashboard is loading...</div>
   }
-
 
   return (
     <div className="max-h-full flex flex-col align-middle content-center gap-5 h-auto w-full max-w-md p-5 bg-popover rounded-lg shadow-xl text-popover-foreground">
@@ -80,7 +88,7 @@ export const CurrUserDashboard: FC = () => {
                 <div className="grid w-full mt-1 gap-1.5">
                   <Label htmlFor="message">New Status?</Label>
                   <Textarea
-                  maxLength={150}
+                    maxLength={150}
                     onChangeCapture={handleTextAreaChange}
                     placeholder={
                       userHasDefaultStatus

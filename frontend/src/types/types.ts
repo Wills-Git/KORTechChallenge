@@ -18,6 +18,11 @@ export type FriendStatusType = {
   Status: string
 }
 
+export interface DynamoDBItem {
+  PK: { S: string } 
+  SK: { S: string } 
+  Status: { S: string } 
+}
 export interface UserInfoProps {
   userInfo: UserInfoType
 }

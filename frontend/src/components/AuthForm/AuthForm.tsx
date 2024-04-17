@@ -101,7 +101,7 @@ export default function AuthForm() {
     debouncedCheck()
   }, [name, debouncedCheck])
 
-//TODO: Refactor to use form properly
+  //TODO: Refactor to use form properly
 
   return (
     <Card className="mx-auto w-full">
@@ -141,13 +141,16 @@ export default function AuthForm() {
               </>
             )}
           </div>
-          <div className="space-y-1">
+          <div className="space-y-1 px-8">
             {!isSigningUp ? (
               <>
                 <Button className="w-full" type="submit" onClick={handleLogin}>
                   Login
                 </Button>
-                <Button className="w-full" onClick={() => setIsSigningUp(true)}>
+                <Button
+                  className="w-[80%]"
+                  onClick={() => setIsSigningUp(true)}
+                >
                   Signup
                 </Button>
               </>
@@ -162,7 +165,7 @@ export default function AuthForm() {
                   Submit
                 </Button>
                 <Button
-                  className="w-full bg-muted-foreground"
+                  className="w-full bg-muted-foreground w-[80%]"
                   onClick={() => setIsSigningUp(false)}
                 >
                   Cancel Signup

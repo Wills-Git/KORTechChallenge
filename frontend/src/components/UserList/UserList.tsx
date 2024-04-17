@@ -17,7 +17,7 @@ const UserList: FC = () => {
         Friend Connection
       </h1>
       <ScrollArea className="w-full h-[calc(90vh-20px)] scroll-gradient overflow-y-auto p-7 mt-4 mb-2 mr-5 rounded-md border scroll-smooth">
-        <div className="grid auto-cols-auto gap-2 w-full">
+        <div className="grid grid-cols-2 gap-2 w-full">
           {data &&
             data.map(user => <UserLazyLoad key={user.PK} userInfo={user} />)}
         </div>
