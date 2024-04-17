@@ -101,13 +101,15 @@ export default function AuthForm() {
     debouncedCheck()
   }, [name, debouncedCheck])
 
+//TODO: Refactor to use form properly
+
   return (
-    <Card className="mx-auto max-w-sm">
+    <Card className="mx-auto w-full">
       <CardHeader className="space-y-1">
         <CardTitle className="text-2xl font-bold">
           {isSigningUp ? "Sign Up" : "Login"}
         </CardTitle>
-        <CardDescription>
+        <CardDescription className="w-full break-words">
           {isSigningUp
             ? "Create your account"
             : "Enter your username to login to your account"}
@@ -142,14 +144,10 @@ export default function AuthForm() {
           <div className="space-y-1">
             {!isSigningUp ? (
               <>
-                <Button className="w-full" type="button" onClick={handleLogin}>
+                <Button className="w-full" type="submit" onClick={handleLogin}>
                   Login
                 </Button>
-                <Button
-                  className="w-full"
-                  type="button"
-                  onClick={() => setIsSigningUp(true)}
-                >
+                <Button className="w-full" onClick={() => setIsSigningUp(true)}>
                   Signup
                 </Button>
               </>
@@ -164,12 +162,12 @@ export default function AuthForm() {
                   Submit
                 </Button>
                 <Button
-                  className="w-full"
+                  className="w-full bg-muted-foreground"
                   onClick={() => setIsSigningUp(false)}
-                  type="button"
                 >
                   Cancel Signup
                 </Button>
+
                 {!isNameAvailable && (
                   <Label className="text-red-500 text-xs" htmlFor="error">
                     That display name is already being used
