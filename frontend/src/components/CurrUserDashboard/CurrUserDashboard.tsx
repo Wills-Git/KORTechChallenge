@@ -77,6 +77,7 @@ export const CurrUserDashboard: FC = () => {
                 <div className="grid w-full mt-1 gap-1.5">
                   <Label htmlFor="message">New Status?</Label>
                   <Textarea
+                  maxLength={150}
                     onChangeCapture={handleTextAreaChange}
                     placeholder={
                       userHasDefaultStatus

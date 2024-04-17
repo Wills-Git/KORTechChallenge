@@ -23,12 +23,12 @@ const UserCard: FC<UserInfoProps> = ({ userInfo }) => {
             <AvatarImage src={userInfo.imageUrl} alt="Avatar" />
             <AvatarFallback>😃</AvatarFallback>
           </Avatar>
-          <div className="flex flex-col items-center ml-4">
+          <div className="grid grid-rows-2 max-w-full">
             <p className="text-sm font-semibold text-foreground">
               {userInfo.name}
             </p>
             <p
-              className={`text-xs ${userHasDefaultStatus ? "text-muted-foreground" : "text-black"} `}
+              className={`text-xs truncate ${userHasDefaultStatus ? "text-muted-foreground" : "text-black"} `}
             >
               {userInfo.status}
             </p>
