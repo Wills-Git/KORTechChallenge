@@ -1,14 +1,13 @@
-import UsersModel from '../models/UsersModel';
-import { ddb } from '../config/ddbConnect';
-import { UserAttributes } from '../types/types';
+// External libraries
 import {
   uniqueNamesGenerator,
   adjectives,
-  colors,
   names,
   Config,
 } from 'unique-names-generator';
 
+// Type imports
+import type { UserAttributes } from '../types/types.ts';
 /**
  * Service layer for managing user data operations.
  */
@@ -23,7 +22,7 @@ class UsersDataService {
    */
   generateUser(name?: string, username?: string): UserAttributes {
     const nameConfig: Config = {
-      dictionaries: [adjectives,names],
+      dictionaries: [adjectives, names],
       separator: '-',
     };
 

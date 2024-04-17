@@ -1,8 +1,15 @@
+// External imports
 import type { FC } from "react"
-import { SkipToken, skipToken } from "@reduxjs/toolkit/query"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar.tsx"
-import type { UserInfoProps } from "@/types/types.ts"
-import { Button } from "@/components/ui/button.tsx"
+import { skipToken } from "@reduxjs/toolkit/query"
+
+// Local imports from redux
+import { useAppSelector } from "@/redux/hooks.ts"
+import {
+  useUpdateFriendStatusMutation,
+  useGetAllFriendStatusesQuery,
+} from "@/redux/friendsApiSlice.ts"
+
+// UI components
 import {
   CardTitle,
   CardDescription,
@@ -10,13 +17,13 @@ import {
   CardContent,
   Card,
 } from "@/components/ui/card.tsx"
-import { Badge } from "../ui/badge.tsx"
-import { useAppSelector } from "@/redux/hooks.ts"
-import { useUpdateFriendStatusMutation } from "@/redux/friendsApiSlice.ts"
-import { useGetAllFriendStatusesQuery } from "@/redux/friendsApiSlice.ts"
+import { Button } from "../ui/button.tsx"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar.tsx"
+import { Badge } from "@/components/ui/badge.tsx"
 import useReduxErrorToast from "@/hooks/useReduxErrorToast.tsx"
-import { DynamoDBItem } from "../../types/types.ts"
-import { DynamoDBItem } from '../../types/types';
+
+// Type imports
+import type { UserInfoProps, DynamoDBItem } from "@/types/types.ts"
 
 const ProfileCard: FC<UserInfoProps> = ({ userInfo }) => {
   const currUser = useAppSelector(state => state.currUser.user)
@@ -31,36 +38,30 @@ const ProfileCard: FC<UserInfoProps> = ({ userInfo }) => {
   ) //skiptoken is a typesafe method to skip query if value is undefined
 
   function findStatusBySK(items: DynamoDBItem[], skValue: string) {
-    if(!items) throw Error
-    
-      for (const item of items) {
-        if (item.SK.S === skValue) {
-          return item.Status.S
-        }
+    if (!items) throw Error
+
+    for (const item of items) {
+      if (item.SK.S === skValue) {
+        return item.Status.S
       }
-    
+    }
+
     return null
   }
-//   const friendStatus = findStatusBySK(friendStatuses is DynamoDBItem[], userInfo.PK)
+  //   const friendStatus = findStatusBySK(friendStatuses is DynamoDBItem[], userInfo.PK)
 
   const handleRequestFriend = async () => {
     if (!currUser || !userInfo) {
-      console.error("Invalid user data")
       return // Exit if user data is incomplete
     }
     const userRequesting = currUser?.PK
     const userBeingRequested = userInfo.PK
-    try {
-      const result = await updateFriendStatus({
-        userPK: userRequesting,
-        requestedUserPK: userBeingRequested,
-        status: "requested",
-      }).unwrap()
 
-      console.log("Friend request sent successfully:", result)
-    } catch (error) {
-      console.error("Failed to send friend request:", error)
-    }
+    const result = await updateFriendStatus({
+      userPK: userRequesting,
+      requestedUserPK: userBeingRequested,
+      status: "requested",
+    }).unwrap()
   }
 
   const userHasDefaultStatus = userInfo.status === "User hasn't posted a status"
@@ -110,7 +111,7 @@ const ProfileCard: FC<UserInfoProps> = ({ userInfo }) => {
             )}
             <Button
               className="rounded bg-red-500 px-4 py-2 text-white hover:bg-red-600"
-              onClick={() => console.log("Block User")}
+              onClick={()=>{}}
             >
               Block User
             </Button>

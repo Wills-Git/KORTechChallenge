@@ -1,8 +1,8 @@
-//@ts-nocheck
+
 import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
-import { ComponentWrapperProps } from "@/types/types.ts"
 
+// util function that shadcn uses for components
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }

@@ -40,7 +40,7 @@ export const usersApiSlice = createApi({
       onQueryStarted: async (newUserData, { dispatch, queryFulfilled }) => {
         try {
           const { data: newUser } = await queryFulfilled
-          console.log(newUser)
+
           dispatch(
             usersApiSlice.util.updateQueryData(
               "getAllUsers",
@@ -51,7 +51,7 @@ export const usersApiSlice = createApi({
             ),
           )
         } catch (error) {
-          console.log("error updating cache with new user", error, newUserData)
+          console.error(error)
         }
       },
     }),

@@ -1,4 +1,7 @@
+// External imports
 import type { FC } from "react"
+
+// UI components
 import { ScrollArea } from "@/components/ui/scroll-area.tsx"
 import {
   Card,
@@ -8,11 +11,10 @@ import {
   CardDescription,
 } from "@/components/ui/card.tsx"
 
-interface Post {
-  id: number
-  title: string
-  content: string
-}
+// types
+import type { Post } from "@/types/types.ts"
+
+
 
 const PostsList: FC = () => {
   const dummyPosts = []

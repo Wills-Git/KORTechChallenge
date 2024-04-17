@@ -1,5 +1,10 @@
+// External libraries
 import express from 'express';
+
+// Controllers
 import userDataController from '../controllers/userDataController';
+
+// Middleware
 import validate from '../middleware/validate';
 
 const router = express.Router();

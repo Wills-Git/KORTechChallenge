@@ -1,12 +1,15 @@
-import { UserAttributes } from '../types/types';
-import { AWSError } from '../types/types';
-import { ddb } from '../config/ddbConnect';
-import { docClient } from '../config/ddbConnect';
-import {
+// AWS SDK Imports
+import type {
   ScanOutput,
   QueryOutput,
   UpdateItemOutput,
-} from 'aws-sdk/clients/dynamodb';
+} from 'aws-sdk/clients/dynamodb.ts';
+
+// Local configuration imports
+import { ddb, docClient } from '../config/ddbConnect';
+
+// Type imports
+import type { UserAttributes, AWSError } from '../types/types.ts';
 
 class UsersModel {
   /**
@@ -32,13 +35,12 @@ class UsersModel {
       ],
     };
     try {
-        //prevents duplicate users
+      //prevents duplicate users
       if (await this.checkUserExists(user.info.PK)) {
         throw new Error('User Already Exists');
       }
       await docClient.transactWrite(transactParams).promise();
     } catch (error) {
-      console.error('Transaction Failed:', error);
       throw error;
     }
   }
@@ -48,24 +50,6 @@ class UsersModel {
  * @param {string} tableName - The name of the table to check.
  
  */
-  async checkTableExists(tableName: string): Promise<boolean> {
-    const params = {
-      TableName: tableName,
-    };
-
-    try {
-      await ddb.describeTable(params).promise();
-      return true; // if promise resolves, the table exists
-    } catch (err) {
-      const error = err as AWSError;
-      if (error && error.code === 'ResourceNotFoundException') {
-        return false; // The table does not exist
-      } else {
-        console.error('Error checking table existence:', err);
-        throw err; // Re-throw the error to be handled by the caller
-      }
-    }
-  }
 
   async getAllUsers() {
     const params = {
@@ -132,9 +116,7 @@ class UsersModel {
 
     try {
       const result: UpdateItemOutput = await docClient.update(params).promise();
-      console.log('Update Successful:', result);
     } catch (error) {
-      console.error('Update Failed:', error);
       throw error;
     }
   }

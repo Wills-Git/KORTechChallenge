@@ -1,11 +1,22 @@
+// External imports
 import type { FC } from "react"
-import UserCard from "../UserCard/UserCard.tsx"
-import { useGetAllUsersQuery } from "@/redux/usersApiSlice.ts"
-import useReduxErrorToast from "@/hooks/useReduxErrorToast.tsx"
-import { ScrollArea } from "../ui/scroll-area.tsx"
 import { useInView } from "react-intersection-observer"
-import type { UserInfoType } from "@/types/types.ts"
+
+// Local imports from Redux Toolkit
+import { useGetAllUsersQuery } from "@/redux/usersApiSlice.ts"
+
+// UI components
+import { ScrollArea } from "../ui/scroll-area.tsx"
 import { Skeleton } from "../ui/skeleton.tsx"
+
+// Local components
+import UserCard from "../UserCard/UserCard.tsx"
+
+// Hooks
+import useReduxErrorToast from "@/hooks/useReduxErrorToast.tsx"
+
+// Type imports
+import type { UserInfoType } from "@/types/types.ts"
 
 const UserList: FC = () => {
   const { data, error, isError } = useGetAllUsersQuery()
@@ -19,7 +30,9 @@ const UserList: FC = () => {
       <ScrollArea className="w-full h-[calc(90vh-20px)] scroll-gradient overflow-y-auto p-7 mt-4 mb-2 mr-5 rounded-md border scroll-smooth">
         <div className="grid grid-cols-2 gap-2 w-full">
           {data &&
-            data.map(user => <UserLazyLoad key={user.PK} userInfo={user} />)}
+            data.map((user: UserInfoType) => (
+              <UserLazyLoad key={user.PK} userInfo={user} />
+            ))}
         </div>
       </ScrollArea>
     </div>

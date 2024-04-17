@@ -1,6 +1,8 @@
+// External imports
 import type { FC } from "react"
+
+// UI components
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar.tsx"
-import type { UserInfoProps } from "@/types/types.ts"
 import { Button } from "@/components/ui/button.tsx"
 import {
   Sheet,
@@ -9,7 +11,12 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet.tsx"
+
+// Local components
 import ProfileCard from "../ProfileCard/ProfileCard.tsx"
+
+// Type imports
+import type { UserInfoProps } from "@/types/types.ts"
 import PostsList from "../PostsList/PostsList.tsx"
 
 const UserCard: FC<UserInfoProps> = ({ userInfo }) => {

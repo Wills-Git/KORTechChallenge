@@ -37,4 +37,6 @@ _recent thoughts_:
 - I probably wont get around to implementing posts - if I were to implement posts I would use a schema like PK: u#ID#posts - SK: p(for post)#ID. The post content would be an attribute on PK: p#ID - SK:'info'. There are a couple ways you could model it and it would take me a while to decide what the absolute best access pattern would be. One drawback of dyanmoDB is that you really have to have a good handle on your access patterns before inserting data, as there are esoteric difficulites with normalizing dynamoDB.
 - I also probably won't get around to websockets, however that implementation has fewer things to think about (not none). I would use websockets throughout the backend to broadcast to connected users any relevant updates that were made to the database - new post from a friend, friend status changing etc. When a user is connected to a room, their profile card changes to online too. I might manage a minimal implementation tomorrow if the rest of the frontend goes well.
 
-## 4/16 finish styling frontend, status and friend statuses
+## 4/16 5 hours finish styling frontend, status and friend statuses
+
+I finished styling and implementing statuses and made good progress on friend statuses - the backend and redux work has been done for the friends feature, ready for the frontend to consume, but I'm leaving it at that for now. I've enjoyed the challenge! 

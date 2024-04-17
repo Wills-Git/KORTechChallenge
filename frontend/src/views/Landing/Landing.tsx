@@ -1,10 +1,11 @@
-import AuthForm from "@/components/AuthForm/AuthForm.tsx"
+import { AuthForm }from "@/components/AuthForm/AuthForm.tsx"
 import "./layout.css"
 import UserList from "@/components/UserList/UserList.tsx"
 import { useAppSelector } from "@/redux/hooks.ts"
 import CurrUserDashboard from "@/components/CurrUserDashboard/CurrUserDashboard.tsx"
+import type { FC } from "react"
 
-function Landing() {
+const Landing: FC = () => {
   const isLoggedIn = useAppSelector(state => state.currUser.isLoggedIn)
   return (
     <>

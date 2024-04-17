@@ -1,11 +1,20 @@
+// External imports
 import { useState, useEffect, memo } from "react"
-import { SkipToken, skipToken } from "@reduxjs/toolkit/query"
-import { useAppSelector } from "@/redux/hooks.ts"
-import { useAppDispatch } from "@/redux/hooks.ts"
-import { useUpdateUserStatusMutation } from "@/redux/usersApiSlice.ts"
 import type { FC, ChangeEvent } from "react"
+
+// Local imports from Redux Toolkit
+import { skipToken } from "@reduxjs/toolkit/query"
+import { useAppSelector, useAppDispatch } from "@/redux/hooks.ts"
+import { useGetAllFriendStatusesQuery } from "@/redux/friendsApiSlice.ts"
+import { useUpdateUserStatusMutation } from "@/redux/usersApiSlice.ts"
+import { logout } from "@/redux/currUserSlice.ts"
+
+// UI components
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar.tsx"
 import { Button } from "@/components/ui/button.tsx"
+import { Badge } from "../ui/badge.tsx"
+import { Textarea } from "../ui/textarea.tsx"
+import { Label } from "../ui/label.tsx"
 import {
   CardTitle,
   CardDescription,
@@ -13,14 +22,11 @@ import {
   CardContent,
   Card,
 } from "@/components/ui/card.tsx"
-import { Badge } from "../ui/badge.tsx"
-import { Textarea } from "../ui/textarea.tsx"
-import { Label } from "../ui/label.tsx"
 import PostsList from "../PostsList/PostsList.tsx"
-import { logout } from "@/redux/currUserSlice.ts"
+
+// Hooks
 import useReduxErrorToast from "@/hooks/useReduxErrorToast.tsx"
 import { useToast } from "../ui/use-toast.ts"
-import { useGetAllFriendStatusesQuery } from "@/redux/friendsApiSlice.ts"
 
 const MemoizedPostsList = memo(PostsList) //prevents rerendering when parent is rerendered, must be declared outside component
 export const CurrUserDashboard: FC = () => {
@@ -33,7 +39,6 @@ export const CurrUserDashboard: FC = () => {
   const { refetch } = useGetAllFriendStatusesQuery(currUser?.PK ?? skipToken) //skips query if PK is undefined
 
   useEffect(() => {
-    
     if (currUser?.PK) {
       refetch() // manual refetch all friend statuses when user logs in, e.g. switching users
     }
@@ -48,6 +53,11 @@ export const CurrUserDashboard: FC = () => {
   const handleUpdateStatus = () => {
     if (currUser && newStatus) {
       updateUserStatus({ PK: currUser.PK, status: newStatus })
+      toast({
+        variant: "positive",
+        title: "Status Update Successful!",
+        description: "Thanks for sharing!",
+      })
     } else {
       toast({
         variant: "destructive",

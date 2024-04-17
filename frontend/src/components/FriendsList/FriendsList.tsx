@@ -1,0 +1,1 @@
+//component to render a list of the friends of clicked on users and the current user

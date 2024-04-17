@@ -15,16 +15,13 @@ class WebSocketService {
   }
 
   private handleConnection(ws: WebSocket): void {
-    ws.on('message', (message: string) => {
-      console.log('Received message:', message);
-    });
+    ws.on('message', (message: string) => {});
 
     ws.on('close', () => {
       this.clients.delete(ws);
-      console.log('Connection closed');
     });
 
-    this.clients.set(ws, {}); 
+    this.clients.set(ws, {});
   }
 
   public notifyFriends(userId: string, message: object): void {

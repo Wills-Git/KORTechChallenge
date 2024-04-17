@@ -1,5 +1,10 @@
+// External imports
 import { useEffect } from "react"
+
+// Hooks
 import { useToast } from "@/components/ui/use-toast.ts"
+
+// Type imports
 import type { ReduxError } from "@/types/types.ts"
 
 // Custom hook for handling errors with a toast notification

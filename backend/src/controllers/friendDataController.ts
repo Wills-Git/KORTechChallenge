@@ -1,6 +1,11 @@
+// External libraries
 import { NextFunction, Request, Response } from 'express';
+import { QueryInput} from 'aws-sdk/clients/dynamodb';
+
+// Local configuration imports
 import { docClient, ddb } from '../config/ddbConnect';
-import { PutItemInput, QueryInput, Put } from 'aws-sdk/clients/dynamodb';
+
+// Type imports
 import { FriendStatusMap } from '../types/types';
 
 const friendDataController = {
@@ -17,7 +22,6 @@ const friendDataController = {
   ) => {
     const { userPK, requestedUserPK, status } = req.body;
 
-    console.log(userPK, requestedUserPK, status);
     const friendStatusMap: FriendStatusMap = {
       // request sent, requested user has pending status
       requested: 'pending',
@@ -61,7 +65,6 @@ const friendDataController = {
       await docClient.transactWrite(params).promise();
       res.status(200).json(userPK); //send back userPK for redux to use with invalidating cache
     } catch (error) {
-      console.error('Failed update friend status:', error);
       let errorMessage = 'unknown error';
       if (error instanceof Error) {
         errorMessage = error.message;
@@ -91,7 +94,7 @@ const friendDataController = {
 
     try {
       const data = await ddb.query(queryParams).promise();
-      console.log('friend data', data);
+
       res.status(200).json(data.Items);
     } catch (error) {
       let errorMessage = 'unknown error';

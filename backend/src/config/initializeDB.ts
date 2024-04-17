@@ -1,7 +1,15 @@
+
+// Models
 import UsersModel from '../models/UsersModel';
-import { ddb } from './ddbConnect';
+
+// Services
 import UsersDataService from '../services/usersDataService';
-import { UserAttributes } from '../types/types';
+
+// Configuration
+import { ddb } from './ddbConnect';
+
+// Type imports
+import { UserAttributes, AWSError } from '../types/types';
 
 export async function initializeDB() {
   const usersModel = new UsersModel();
@@ -13,7 +21,7 @@ export async function initializeDB() {
    * @returns {Promise<void>} A promise that resolves when the table creation and user insertion processes are complete.
    */
   async function generateDummyTable(): Promise<void> {
-    console.log('checking if table needs to be made');
+     
     const tableParams = {
       TableName: String(process.env.TABLENAME),
       KeySchema: [
@@ -30,20 +38,38 @@ export async function initializeDB() {
       },
     };
 
-    const tableExists = await usersModel.checkTableExists(
+     async function checkTableExists(tableName: string): Promise<boolean> {
+    const params = {
+      TableName: tableName,
+    };
+
+    try {
+      await ddb.describeTable(params).promise();
+      return true; // if promise resolves, the table exists
+    } catch (err) {
+      const error = err as AWSError;
+      if (error && error.code === 'ResourceNotFoundException') {
+        return false; // The table does not exist
+      } else {
+        throw err; // Re-throw the error to be handled by the caller
+      }
+    }
+  }
+
+    const tableExists = await checkTableExists(
       tableParams.TableName
     );
     if (!tableExists) {
-      console.log('Creating table...');
+       console.log('Creating table...')
       await ddb.createTable(tableParams).promise();
-      console.log('Waiting for the table to be fully created...');
+       
       await ddb
         .waitFor('tableExists', { TableName: tableParams.TableName })
         .promise();
-      console.log('Table created. Now inserting users...');
+       console.log('Creating users...')
       await createAndInsertUsers(200, tableParams.TableName);
     } else {
-      console.log('Table already exists');
+       
     }
   }
 
@@ -71,5 +97,5 @@ export async function initializeDB() {
   }
 
   await generateDummyTable();
-  console.log('Initialization Complete');
+   
 }

@@ -1,4 +1,17 @@
-import { FC, useState, useEffect } from "react"
+// External imports
+import { useState, useEffect } from "react"
+import type { FC } from "react"
+import { useDebouncedCallback } from "use-debounce"
+
+// Redux specific imports
+import { useAppDispatch } from "@/redux/hooks.ts"
+import { loginSuccess } from "@/redux/currUserSlice.ts"
+import {
+  useCreateUserMutation,
+  useGetAllUsersQuery,
+} from "@/redux/usersApiSlice.ts"
+
+// UI components
 import {
   Card,
   CardTitle,
@@ -9,18 +22,15 @@ import {
 import { Label } from "@/components/ui/label.tsx"
 import { Input } from "@/components/ui/input.tsx"
 import { Button } from "@/components/ui/button.tsx"
-import {
-  useCreateUserMutation,
-  useGetAllUsersQuery,
-} from "@/redux/usersApiSlice.ts"
+
+// Custom hooks
 import { useToast } from "../ui/use-toast.ts"
 import useReduxErrorToast from "@/hooks/useReduxErrorToast.tsx"
-import { loginSuccess } from "@/redux/currUserSlice.ts"
-import { useAppDispatch } from "@/redux/hooks.ts"
-import type { UserInfoType } from "@/types/types.ts"
-import { useDebouncedCallback } from "use-debounce"
 
-export default function AuthForm() {
+// Type imports
+import type { UserInfoType } from "@/types/types.ts"
+
+export const AuthForm: FC = () => {
   const [username, setUsername] = useState("")
   const [name, setName] = useState("")
   const [isSigningUp, setIsSigningUp] = useState(false)

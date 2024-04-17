@@ -26,6 +26,12 @@ export interface DynamoDBItem {
 export interface UserInfoProps {
   userInfo: UserInfoType
 }
+
+export interface Post {
+  id: number
+  title: string
+  content: string
+}
 interface SerializedError {
   name?: string
   message?: string
