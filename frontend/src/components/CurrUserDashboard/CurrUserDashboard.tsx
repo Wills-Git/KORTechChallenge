@@ -20,6 +20,9 @@ import { logout } from "@/redux/currUserSlice.ts"
 import useReduxErrorToast from "@/hooks/useReduxErrorToast.tsx"
 import { useToast } from "../ui/use-toast.ts"
 
+
+
+const MemoizedPostsList = memo(PostsList) //prevents rerendering when parent is rerendered, must be declared outside component
 export const CurrUserDashboard: FC = () => {
   const [newStatus, setNewStatus] = useState("")
   const currUser = useAppSelector(state => state.currUser.user)
@@ -35,7 +38,7 @@ export const CurrUserDashboard: FC = () => {
 
   const handleUpdateStatus = () => {
     if (currUser && newStatus) {
-      const response = updateUserStatus({ PK: currUser.PK, status: newStatus })
+    updateUserStatus({ PK: currUser.PK, status: newStatus })
     } else {
       toast({
         variant: "destructive",
@@ -54,7 +57,7 @@ export const CurrUserDashboard: FC = () => {
   if (!currUser) {
     return <div>Your dashboard is loading...</div>
   }
-  const MemoizedPostsList = memo(PostsList)
+
 
   return (
     <div className="max-h-full flex flex-col align-middle content-center gap-5 h-auto w-full max-w-md p-5 bg-popover rounded-lg shadow-xl text-popover-foreground">
@@ -73,7 +76,7 @@ export const CurrUserDashboard: FC = () => {
           <div className="flex flex-col items-center gap-4">
             <Badge className="drop-shadow-lg">Online</Badge>
             <Card>
-              <CardContent className="">
+              <CardContent>
                 <div className="grid w-full mt-1 gap-1.5">
                   <Label htmlFor="message">New Status?</Label>
                   <Textarea

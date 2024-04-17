@@ -16,7 +16,6 @@ const currUserSlice = createSlice({
     loginSuccess(state, action: PayloadAction<{ user: UserInfoType }>) {
       state.isLoggedIn = true
       state.user = action.payload.user
-      console.log("curruser in redux store is", state.user)
     },
     logout(state) {
       state.isLoggedIn = false
