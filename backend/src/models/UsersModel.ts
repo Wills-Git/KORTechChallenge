@@ -2,8 +2,11 @@ import { UserAttributes } from '../types/types';
 import { AWSError } from '../types/types';
 import { ddb } from '../config/ddbConnect';
 import { docClient } from '../config/ddbConnect';
-import { ScanOutput, QueryOutput } from 'aws-sdk/clients/dynamodb';
-
+import {
+  ScanOutput,
+  QueryOutput,
+  UpdateItemOutput,
+} from 'aws-sdk/clients/dynamodb';
 
 class UsersModel {
   /**
@@ -78,7 +81,7 @@ class UsersModel {
       },
       ProjectionExpression: 'PK, #name, imageUrl, content, #status',
     };
- 
+
     const scanOutput: ScanOutput = await docClient.scan(params).promise();
 
     return scanOutput.Items;
@@ -87,9 +90,9 @@ class UsersModel {
   async checkUserExists(PK: string) {
     const params = {
       TableName: String(process.env.TABLENAME),
-      KeyConditionExpression: 'PK = :pk',
+      KeyConditionExpression: 'PK = :PK',
       ExpressionAttributeValues: {
-        ':pk': PK,
+        ':PK': PK,
       },
       ProjectionExpression: 'PK',
     };
@@ -97,6 +100,44 @@ class UsersModel {
     // If the query finds any items, it means the user exists.
     const exists: boolean = result.Items?.length ? true : false;
     return exists;
+  }
+  // I would optimally write a more general 'updateUser' function.
+  /**
+   * Updates the status attribute for a user in the DynamoDB table.
+   *
+   * @param {string} PK - The primary key of the user whose status needs to be updated.
+   * @param {string} status - The new status to set for the user.
+   * @param {string} [tableName=process.env.TABLENAME] - The DynamoDB table to update.
+   * @returns {Promise<void>} A promise that resolves if the update is successful, or rejects with an error if the update fails.
+   */
+  async updateUserStatus(
+    PK: string,
+    status: string,
+    tableName: string = String(process.env.TABLENAME)
+  ) {
+    const params = {
+      TableName: tableName,
+      Key: {
+        PK,
+        SK: '"info"',
+      },
+      UpdateExpression: 'set #status = :status',
+      ExpressionAttributeNames: {
+        '#status': 'status', // 'status' is a reserved keyword
+      },
+      ExpressionAttributeValues: {
+        ':status': status,
+      },
+      ReturnValues: 'UPDATED_NEW', // Returns the attribute as it appears after it is updated
+    };
+
+    try {
+      const result: UpdateItemOutput = await docClient.update(params).promise();
+      console.log('Update Successful:', result);
+    } catch (error) {
+      console.error('Update Failed:', error);
+      throw error;
+    }
   }
 }
 export default UsersModel;

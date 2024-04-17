@@ -7,7 +7,6 @@ import {
   CardTitle,
   CardDescription,
 } from "@/components/ui/card.tsx"
-import { UserInfoProps } from "@/types/types.ts"
 
 interface Post {
   id: number

@@ -1,22 +1,34 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
 import type { UserCreationType, UserInfoType } from "@/types/types.ts"
 
+type UserTag = { type: "User"; id: string }
+type AllUsersTag = { type: "AllUsers"; id: string }
+
 export const usersApiSlice = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: "http://localhost:3000/u/" }),
   reducerPath: "UsersApi",
-  tagTypes: ["User", "allUsers"],
+  tagTypes: ["User", "AllUsers"],
   endpoints: build => ({
     getAllUsers: build.query<UserInfoType[], void>({
       query: () => `allusers`,
       transformResponse: (response: { users: UserInfoType[] }) =>
         response.users,
-      providesTags: [{ type: "allUsers", id: "general" }],
+      // Function to provide tags for caching and invalidation purposes, providing granular updates in ui
+      providesTags: (
+        result: UserInfoType[] | undefined,
+      ): (UserTag | AllUsersTag)[] => [
+        { type: "AllUsers", id: "LIST" } as AllUsersTag,
+        // Spread operator to conditionally include tags for each user if the result is not undefined.
+        ...(result
+          ? result.map(user => ({ type: "User", id: user.PK }) as UserTag)
+          : []), // If result is undefined, spread an empty array (no user tags)
+      ],
     }),
     getUserByPK: build.query<UserInfoType, string>({
-      query: pk => `${pk}`,
+      query: PK => `${PK}`,
       //if there is a user returned, they are assigned tags, otherwise no tags
-      providesTags: (result, error, pk) =>
-        result ? [{ type: "User", id: result.PK }] : [],
+      providesTags: (result, error, PK) =>
+        result ? [{ type: "User", id: PK }] : [],
     }),
     createUser: build.mutation<UserInfoType, UserCreationType>({
       query: userDetails => ({
@@ -45,17 +57,17 @@ export const usersApiSlice = createApi({
     }),
     updateUserStatus: build.mutation<
       UserInfoType,
-      { pk: string; status: string }
+      { PK: string; status: string }
     >({
-      query: ({ pk, status }) => ({
-        url: `update/${pk}`,
+      query: ({ PK, status }) => ({
+        url: `update`,
         method: "PATCH",
-        body: { status },
+        body: { PK, status },
       }),
-      invalidatesTags: (result, error, { pk }) => [{ type: "User", id: pk }],
-      async onQueryStarted({ pk, status }, { dispatch, queryFulfilled }) {
+      invalidatesTags: (result, error, { PK }) => [{ type: "User", id: PK }],
+      async onQueryStarted({ PK, status }, { dispatch, queryFulfilled }) {
         const patchResult = dispatch(
-          usersApiSlice.util.updateQueryData("getUserByPK", pk, draftUser => {
+          usersApiSlice.util.updateQueryData("getUserByPK", PK, draftUser => {
             if (draftUser) {
               draftUser.status = status
             }
@@ -76,4 +88,5 @@ export const {
   useGetAllUsersQuery,
   useGetUserByPKQuery,
   useCreateUserMutation,
+  useUpdateUserStatusMutation,
 } = usersApiSlice

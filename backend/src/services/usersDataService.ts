@@ -18,12 +18,12 @@ class UsersDataService {
    * random name and username if not provided and uses these as primary keys to prevent duplicates.
    *
    * @param {string} [name] - Optional name for the user.
-   * @param {string} [username] - Optional username for the user. If not provided, a sanitized version of the generated name is used.
+   * @param {string} [username] - Optional username for the user. If not provided, a randomized name is used.
    * @returns {UserAttributes} An object containing user attributes structured for database insertion.
    */
   generateUser(name?: string, username?: string): UserAttributes {
     const nameConfig: Config = {
-      dictionaries: [names],
+      dictionaries: [adjectives,names],
       separator: '-',
     };
 

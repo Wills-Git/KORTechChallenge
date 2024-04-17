@@ -42,6 +42,26 @@ const userDataController = {
       console.error('Failed to fetch users:', error);
     }
   },
+  updateUserStatus: async (req: Request, res: Response, next: NextFunction) => {
+    const { PK, status } = req.body; // Assume PK and status are sent in the body
+
+    if (!PK || !status) {
+      console.log(PK, status);
+      return res.status(400).json({ message: 'PK and status are required.' });
+    }
+
+    try {
+      await usersModel.updateUserStatus(PK, status);
+      res.status(200).json({ message: 'User status updated successfully.' });
+    } catch (error) {
+      console.error('Error updating user status:', error);
+      let errorMessage = 'Failed to update user status';
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      }
+      res.status(500).json({ message: errorMessage });
+    }
+  },
 };
 
 export default userDataController;

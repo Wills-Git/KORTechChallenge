@@ -24,7 +24,7 @@ class WebSocketService {
       console.log('Connection closed');
     });
 
-    this.clients.set(ws, {}); // You might want to store more detailed client data
+    this.clients.set(ws, {}); 
   }
 
   public notifyFriends(userId: string, message: object): void {
@@ -36,7 +36,6 @@ class WebSocketService {
   }
 
   private isFriend(userId: string, ws: WebSocket): boolean {
-    // Implement logic to determine if the websocket belongs to a friend
     return true; // Placeholder logic
   }
 }

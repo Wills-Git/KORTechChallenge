@@ -78,9 +78,9 @@ const friendDataController = {
     const { userPK } = req.params;
     const queryParams: QueryInput = {
       TableName: String(process.env.TABLENAME),
-      KeyConditionExpression: 'PK = :pk and begins_with(SK, :skPrefix)',
+      KeyConditionExpression: 'PK = :PK and begins_with(SK, :skPrefix)',
       ExpressionAttributeValues: {
-        ':pk': { S: `u#${userPK}#friendstatus` },
+        ':PK': { S: `u#${userPK}#friendstatus` },
         ':skPrefix': { S: 'u#' },
       },
     };
