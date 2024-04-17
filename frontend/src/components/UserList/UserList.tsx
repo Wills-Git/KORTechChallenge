@@ -12,12 +12,12 @@ const UserList: FC = () => {
   useReduxErrorToast(error, isError)
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center w-full">
       <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl text-primary mt-5">
         Friend Connection
       </h1>
-      <ScrollArea className="w-[90%] h-[calc(90vh-20px)] scroll-gradient overflow-y-auto p-7 mt-4 mb-2 mr-5 rounded-md border scroll-smooth">
-        <div className="grid grid-cols-3 gap-2 w-full">
+      <ScrollArea className="w-full h-[calc(90vh-20px)] scroll-gradient overflow-y-auto p-7 mt-4 mb-2 mr-5 rounded-md border scroll-smooth">
+        <div className="grid auto-cols-auto gap-2 w-full">
           {data &&
             data.map(user => <UserLazyLoad key={user.PK} userInfo={user} />)}
         </div>
